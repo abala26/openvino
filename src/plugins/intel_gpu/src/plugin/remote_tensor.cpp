@@ -1,6 +1,6 @@
 // Copyright (C) 2018-2025 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
-// 
+//
 
 #include "intel_gpu/plugin/common_utils.hpp"
 #include "intel_gpu/plugin/remote_context.hpp"
