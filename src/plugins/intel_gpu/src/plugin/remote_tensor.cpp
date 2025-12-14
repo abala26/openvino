@@ -324,10 +324,26 @@ void RemoteTensorImpl::allocate() {
         m_memory_object = engine.allocate_memory(m_layout, cldnn::allocation_type::usm_host, reset);
         break;
     }
+        /*
     case TensorType::BT_USM_DEVICE_INTERNAL: {
         m_memory_object = engine.allocate_memory(m_layout, cldnn::allocation_type::usm_device, reset);
         break;
     }
+        */
+
+        case TensorType::BT_USM_DEVICE_INTERNAL: {
+        try {
+            m_memory_object = engine.allocate_memory(m_layout, cldnn::allocation_type::usm_device, reset);
+        } catch (...) {
+            GPU_DEBUG_INFO << "[WARNING] USM allocation failed on new driver. Falling back to classic OCL Buffer." << std::endl;
+            
+            m_mem_type = TensorType::BT_BUF_INTERNAL;
+            
+            m_memory_object = engine.allocate_memory(m_layout, cldnn::allocation_type::cl_mem, reset);
+        }
+        break;
+    }
+        
     case TensorType::BT_BUF_SHARED: {
         m_memory_object = engine.share_buffer(m_layout, m_mem);
         break;
